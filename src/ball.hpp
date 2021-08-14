@@ -7,8 +7,10 @@ class Ball
 {
 private:
 	const float size = 32.f;
-
-	float speed;
+	const float maxGravity = 12.f;
+	
+	float jumpStrength;
+	float speed, gravity = 0.f;
 	double b_sin, b_cos;
 
 	sf::RectangleShape rec;
@@ -21,6 +23,9 @@ public:
 
 	//Getters
 	sf::RectangleShape getRec(void);
+
+	//Setters
+	void setGravity(float f_gravity);
 
 };
 

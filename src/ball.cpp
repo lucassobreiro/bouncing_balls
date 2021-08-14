@@ -1,5 +1,7 @@
 #include "ball.hpp"
 
+extern App app;
+
 void Ball::initRec(void)
 {
 	tex.loadFromFile("res/ball.png");
@@ -10,6 +12,7 @@ void Ball::initRec(void)
 	rec.setTexture(&tex);
 	
 	speed = rand()%8+4;
+	jumpStrength = -rand()%15-8;
 	newAngle(rand()%360);
 }
 
@@ -25,7 +28,19 @@ void Ball::newAngle(float angle)
 void Ball::movement(void)
 {
 	if(!sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-		rec.move(b_cos * speed, b_sin * speed);
+	{
+		if(app.getGravityMode())
+		{
+			gravity += 0.2f;
+			if(gravity > maxGravity)
+				gravity = maxGravity;
+			rec.move(b_cos * speed, gravity);
+		}
+		else
+		{
+			rec.move(b_cos * speed, b_sin * speed);
+		}
+	}
 	
 	//bounce
 	if(rec.getPosition().x < 0)
@@ -42,11 +57,13 @@ void Ball::movement(void)
 	{
 		rec.setPosition(rec.getPosition().x, 0);
 		b_sin -= b_sin * 2;
+		gravity = 0.f;
 	}
 	if(rec.getPosition().y > W_HEIGHT - size)
 	{
 		rec.setPosition(rec.getPosition().x, W_HEIGHT - size);
 		b_sin -= b_sin * 2;
+		gravity = jumpStrength;
 	}
 }
 
@@ -54,5 +71,11 @@ void Ball::movement(void)
 sf::RectangleShape Ball::getRec(void)
 {
 	return rec;
+}
+
+//setters
+void Ball::setGravity(float f_gravity)
+{
+	gravity = f_gravity;
 }
 

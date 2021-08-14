@@ -1,8 +1,9 @@
 #include "app.hpp"
 
+App app;
+
 int main(void)
 {
-	App app;
 	app.initApp();
 
 	return 0;
