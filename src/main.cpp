@@ -2,9 +2,12 @@
 
 App app;
 
-int main(void)
+int main(int argc, char* argv[])
 {
-	app.initApp();
+	if(argc > 1)
+		app.initApp(argv[1]);
+	else
+		app.initApp("res/bg.png");
 
 	return 0;
 }

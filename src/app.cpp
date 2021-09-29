@@ -1,26 +1,34 @@
 #include "app.hpp"
 
-Ball ball[BALL_LIMIT];
+std::vector<Ball> ball;
+Ball ballB;
 
-void App::initApp(void)
+void App::initApp(std::string bg_File)
 {
 	srand(time(NULL));
-	
-	window.create(sf::VideoMode(W_WIDTH, W_HEIGHT), "Bouncing Balls - By lucassobreiro", sf::Style::Close);
-	window.setFramerateLimit(60);
-	window.setKeyRepeatEnabled(false);
-	
-	bg_Tex.loadFromFile("res/bg.png");
-	bg_Spr.setTexture(bg_Tex);
+	std::cout << "Bouncing Balls\nBy Lucas Sobreiro" << std::endl;
 
-	for(int a = 0; a<BALL_LIMIT; a++)
+	for(int a = 0; a<ballLimit; a++)
+		ball.push_back(ballB);
+
+	window.create(sf::VideoMode(W_WIDTH, W_HEIGHT), "Bouncing Balls", sf::Style::Close);
+	window.setFramerateLimit(60);
+	window.setKeyRepeatEnabled(true);
+	
+	if(!bg_Tex.loadFromFile(bg_File) || !ball_Tex.loadFromFile("res/ball.png"))
+		window.close();
+	bg_Tex.setSmooth(true);
+	bg_Rec.setTexture(&bg_Tex);
+	bg_Rec.setSize(sf::Vector2f(W_WIDTH, W_HEIGHT));
+
+	for(int a = 0; a<ballLimit; a++)
 		ball[a].initRec();
 	update();
 }
 
-int App::update(void)
+void App::update(void)
 {
-	while(true)
+	while(window.isOpen())
 	{
 		while(window.pollEvent(evt))
 		{
@@ -28,7 +36,7 @@ int App::update(void)
 			{
 				case (sf::Event::Closed):
 				{
-					return 0;	
+					window.close();	
 					break;
 				}
 
@@ -39,14 +47,34 @@ int App::update(void)
 						case (sf::Keyboard::Enter):
 						{
 							gravityMode = !gravityMode;
-							for(int a = 0; a<BALL_LIMIT && gravityMode; a++)
+							for(int a = 0; a<ballLimit && gravityMode; a++)
 								ball[a].setGravity(0.f);
+							break;
+						}
+
+						case (sf::Keyboard::Up):
+						{
+							ballLimit ++;
+							ball.push_back(ballB);
+							ball[ballLimit - 1].initRec();
+							std::cout << ballLimit << std::endl; 
+							break;
+						}
+
+						case (sf::Keyboard::Down):
+						{
+							if(ballLimit > 0)
+							{
+								ballLimit --;
+								ball.pop_back();
+								std::cout << ballLimit << std::endl; 
+							}
 							break;
 						}
 
 						case (sf::Keyboard::Escape):
 						{
-							return 0;
+							window.close();
 							break;
 						}
 					
@@ -61,12 +89,13 @@ int App::update(void)
 			}
 		}
 		
-		for(int a = 0; a<BALL_LIMIT; a++)
+		for(int a = 0; a<ballLimit; a++)
 			ball[a].movement();
 
 		//draw
-		window.draw(bg_Spr);
-		for(int a = 0; a<BALL_LIMIT; a++)
+		window.clear(sf::Color::White);
+		window.draw(bg_Rec);
+		for(int a = 0; a<ballLimit; a++)
 			window.draw(ball[a].getRec());
 		window.display();
 	}
@@ -76,5 +105,10 @@ int App::update(void)
 bool App::getGravityMode()
 {
 	return gravityMode;
+}
+
+sf::Texture* App::getBallTexture()
+{
+	return &ball_Tex;
 }
 

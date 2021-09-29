@@ -6,15 +6,14 @@
 class Ball
 {
 private:
-	const float size = 32.f;
-	const float maxGravity = 12.f;
+	static const int size = 32;
+	static const int maxGravity = 12;
 	
 	float jumpStrength;
 	float speed, gravity = 0.f;
 	double b_sin, b_cos;
 
 	sf::RectangleShape rec;
-	sf::Texture tex;
 
 public:
 	void initRec(void);

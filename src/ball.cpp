@@ -4,12 +4,10 @@ extern App app;
 
 void Ball::initRec(void)
 {
-	tex.loadFromFile("res/ball.png");
-
 	rec.setSize(sf::Vector2f(size, size));
 	rec.setPosition(sf::Vector2f(rand()%W_WIDTH - size, rand()%W_HEIGHT - size));
 	rec.setFillColor(sf::Color(rand()%255, rand()%255, rand()%255));
-	rec.setTexture(&tex);
+	rec.setTexture(app.getBallTexture());
 	
 	speed = rand()%8+4;
 	jumpStrength = -rand()%15-8;

@@ -2,36 +2,36 @@
 #define APP_HPP
 
 #include <SFML/Graphics.hpp>
-//#include <iostream>
+#include <iostream>
+#include <vector>
 #include <math.h>
 #include <time.h>
 #include "ball.hpp"
 
 //window size
-#define W_WIDTH 1024
-#define W_HEIGHT 768
-
-//ball limit
-#define BALL_LIMIT 32
+#define W_WIDTH 1280
+#define W_HEIGHT 720
 
 class App
 {
 private:
-	bool gravityMode = false;
+	int ballLimit = 32;
+	bool gravityMode = true;
 
 	sf::RenderWindow window;
 	sf::Event evt;
 
-	//background
-	sf::Texture bg_Tex;
-	sf::Sprite bg_Spr;
+	sf::Texture bg_Tex, ball_Tex;
+	sf::RectangleShape bg_Rec;
+
+	void update(void);
 
 public:
-	void initApp(void);
-	int update(void);
+	void initApp(std::string bg_File);
 
 	//getters
 	bool getGravityMode();
+	sf::Texture* getBallTexture();
 };
 
 #endif //APP_HPP
