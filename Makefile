@@ -14,9 +14,9 @@ all:
 compile:
 	g++ src/*.cpp -I src/ -c -Wall
 	g++ *.o -o $(APP) -lsfml-graphics -lsfml-window -lsfml-system
+	chmod +x $(APP)
 
 run:
-	chmod +x $(APP)
 	./$(APP)
 
 clear:
